@@ -4,6 +4,7 @@ import importlib
 import inspect
 import os
 import sys
+import argparse
 from itertools import chain
 from os.path import dirname, join as jp, splitext
 
@@ -11,15 +12,6 @@ CWD = dirname(sys.modules[__name__].__file__)
 sys.path.insert(0, jp(CWD, '..'))
 
 from chibitest import runner, TestCase, Benchmark
-
-
-help_message = """\
-Options:
-  --include (-i)    comma separated list of testcases
-  --exclude (-e)    comma separated list of testcases
-  --benchmark (-b)  run bechmarks
-  --list (-l)       list all testcases
-"""
 
 
 def get_test_modules():
@@ -51,7 +43,7 @@ def get_testcases(module):
         for _, testcase in inspect.getmembers(module, is_testcase)]
 
 
-def run_testcases(testcases, benchmark=False, include=[], exclude=[]):
+def run_testcases(testcases, benchmark=False, include=[], exclude=[], single=None):
     if include:
         testcases = [n for n in testcases if n[0] in include]
     if exclude:
@@ -62,36 +54,38 @@ def run_testcases(testcases, benchmark=False, include=[], exclude=[]):
     else:
         testcases = [n[1] for n in testcases if not is_benchmark(n[1])]
 
-    runner(testcases)
+    runner(testcases, method_name=single)
 
 
 if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    group = parser.add_mutually_exclusive_group()
+    parser.add_argument("-l", "--list", help="list all testcases",
+                        action="store_true")
+    parser.add_argument("-b", "--benchmark", help="run benchmarks",
+                        action="store_true")
+    group.add_argument("-s", "--single", type=str, default=None,
+                        help="single test function to run")
+    group.add_argument("-i", "--include", type=str, default='',
+                        help="comma separated list of testcases to include")
+    group.add_argument("-e", "--exclude", type=str, default='',
+                        help="comma separated list of testcases to exclude")
+
+    args = parser.parse_args()
+    
     testcases = list(chain(*map(get_testcases, get_test_modules())))
     include = []
     exclude = []
     benchmark = False
 
-    if len(sys.argv) >= 2:
-        if sys.argv[1] in ('-l', '--list'):
-            for name, testcase in testcases:
-                print(name)
-            sys.exit(0)
-        elif sys.argv[1] in ('-h', '--help'):
-            print(help_message)
-            sys.exit(0)
-        else:
-            last_arg = '--include'
-            for arg in sys.argv[1:]:
-                if arg in ('-i', '--include', '-e', '--exclude'):
-                    last_arg = arg
-                elif not arg.startswith('-'):  # - or --
-                    arg = [n for n in arg.split(',') if n]
-                    if last_arg in ('-i', '--include'):
-                        include.extend(arg)
-                    elif last_arg in ('-e', '--exclude'):
-                        exclude.extend(arg)
+    if args.list:
+        for name, testcase in testcases:
+            print(name)
+        sys.exit(0)
 
-    if '-b' in sys.argv[1:] or '--benchmark' in sys.argv[1:]:
-        benchmark = True
+    if args.include:
+        include=args.include.split(',')
+    elif args.exclude:
+        exclude=args.exclude.split(',')
 
-    run_testcases(testcases, benchmark, include, exclude)
+    run_testcases(testcases, benchmark, include, exclude, args.single)

@@ -193,10 +193,9 @@ class TestCase(object):
     def __init__(self, config):
         self.config = config
         self._tests = []
-
         for t in dir(self):
             if t.startswith('test_'):
-                self.add_test(getattr(self, t))
+                self.add_test(t, getattr(self, t))
 
     @classmethod
     def name(cls):
@@ -206,8 +205,8 @@ class TestCase(object):
         else:
             return cls.__name__
 
-    def add_test(self, func):
-        self._tests.append(self.wrap_test(func))
+    def add_test(self, name, func):
+        self._tests.append((name, self.wrap_test(func)))
 
     def wrap_test(self, func):
         def catch_exception():
@@ -237,10 +236,11 @@ class TestCase(object):
     def teardown(self):
         pass
 
-    def run(self):
+    def run(self, method_name=None):
         self.setup()
-        for test in self._tests:
-            yield test()
+        for name, test in self._tests:
+            if method_name is None or name == method_name:
+                yield test()
         self.teardown()
 
 
@@ -289,7 +289,7 @@ class Benchmark(TestCase):
         return catch_exception
 
 
-def runner(testcases, setup_func=None, teardown_func=None, config={}):
+def runner(testcases, setup_func=None, teardown_func=None, config={}, method_name=None):
     passed = failed = 0
     config = defaultdict(lambda: None, config)
 
@@ -298,10 +298,11 @@ def runner(testcases, setup_func=None, teardown_func=None, config={}):
 
     for testcase in testcases:
         tests = testcase(config)
-
+        if method_name and not testcase.__name__ == method_name.split('.')[0]:
+            continue
         print('>> {0}'.format(testcase.name()))
 
-        for result in tests.run():
+        for result in tests.run(method_name.split('.')[1] if method_name else None):
             if result.passed:
                 passed += 1
             else:

@@ -36,7 +36,7 @@ class MarkdownConformanceTest_10(TestCase):
             ok(actual_result).diff(expected_result)
 
         test.__name__ = self._test_name(text_path)
-        self.add_test(test)
+        self.add_test(test.__name__, test)
 
     def _test_name(self, text_path):
         name = path.splitext(path.basename(text_path))[0]

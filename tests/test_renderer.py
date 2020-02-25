@@ -362,7 +362,7 @@ class CustomRendererTest(TestCase):
             ok(render(supplied)).diff(expected)
 
         test.__name__ = 'test_' + name
-        self.add_test(test)
+        self.add_test(test.__name__, test)
 
 
 class BugRenderer(m.BaseRenderer):
