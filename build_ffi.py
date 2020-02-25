@@ -71,7 +71,9 @@ ffi.set_source(
         'misaka/hoedown/autolink.c',
         'misaka/extra.c',
     ),
-    include_dirs=('misaka',))
+    include_dirs=('misaka',),
+    extra_compile_args=["-ftest-coverage", "-fprofile-arcs"],
+    extra_link_args=["-ftest-coverage", "-fprofile-arcs"])
 
 
 # NOTE: The constants are refined here, because CFFI
