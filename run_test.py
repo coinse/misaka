@@ -2,8 +2,10 @@ import os
 import subprocess
 import shlex
 import xml.etree.ElementTree as ET
-import numpy
+import numpy as np
 from tqdm import tqdm
+from sbfl import ochiai
+from sbfl.utils import ranking
 
 TESTLIST = "tests/testlist.txt"
 PYTHON_COVERAGE_REPORT = "./misaka.xml"
@@ -86,6 +88,15 @@ if __name__ == "__main__":
         coverage.append([ hits[f][l] for f, l in code_elements ])
         test_results.append(1 if test_result == 'PASSED' else 0)
 
-    X = numpy.array(coverage)
-    y = numpy.array(test_results)
-    print(X.shape, y.shape)
+    if 0 in test_results:
+        X = np.array(coverage)
+        y = np.array(test_results)
+        for i in np.where(y == 0)[0]:
+            print("FAILED: ", tests[i])
+        print(ochiai(X, y))
+        ranks = ranking(ochiai(X, y))
+        for i, r in enumerate(ranks):
+            if r <= 10:
+                print(r, code_elements[i])
+    else:
+        print("no failing test cases")
