@@ -6,10 +6,37 @@ import numpy as np
 from tqdm import tqdm
 from sbfl import ochiai
 from sbfl.utils import ranking
+from cov_parser import cobertura, gcov
 
 TESTLIST = "tests/testlist.txt"
 PYTHON_COVERAGE_REPORT = "./misaka.xml"
 CODE_ELEMENTS = []
+F_LINES = {}
+
+def get_py_f_lines(filepath):
+    f_lines = {}
+    function = None
+    cls = None
+    with open(filepath, 'r') as f:
+        for i, line in enumerate(f):
+            if line.startswith('def '):
+                function = line.split()[1].split('(')[0]
+                f_lines[function] = []
+                cls = None
+                continue
+            if line.startswith('class'):
+                cls = line.split()[1].split('(')[0].split(':')[0]
+                function = None
+                continue
+            if cls is not None and line.strip().startswith('def '):
+                function = f"{cls}${line.strip().split()[1].split('(')[0]}"
+                f_lines[function] = []
+                continue
+            lineno = i+1
+            if function is not None:
+                f_lines[function].append(lineno)
+    print(f_lines)
+    return f_lines
 
 def execute_command(cmd, timeout=60):
     #print(f"$ {cmd}")
@@ -44,31 +71,21 @@ def run_testcase(testname):
     for dirpath, dirnames, filenames in os.walk('misaka/'):
         for filename in filenames:
             if os.path.splitext(filename)[1] == '.gcno':
-                execute_command(f"gcov -p {os.path.join(dirpath, os.path.splitext(filename)[0] + '.c')}")
+                execute_command(f"gcov -pfb {os.path.join(dirpath, os.path.splitext(filename)[0] + '.c')}")
     # Analyse Coverage Results
 
-    tree = ET.parse(PYTHON_COVERAGE_REPORT)
-    root = tree.getroot()
-    hits = {}
-    source_files = root.findall("./packages/package/classes/class")
-    for source_file in source_files:
-        filepath = source_file.attrib['filename']
-        hits[filepath] = {}
-        for line in source_file.findall("./lines/line"):
-            hits[filepath][int(line.attrib['number'])] = int(line.attrib['hits'])
-
+    hits = cobertura(PYTHON_COVERAGE_REPORT)
+    for filepath in hits:
+        if filepath.endswith('.py') and filepath not in F_LINES:
+            F_LINES[filepath] = get_py_f_lines(filepath)
     for filename in os.listdir('.'):
         if not os.path.splitext(filename)[1] == '.gcov':
             continue
         filepath = os.path.splitext(filename.replace('#', '/'))[0]
-        hits[filepath] = {}
-        with open(filename, 'r') as f:
-            for line in f:
-                count, number = line.split(':')[0].strip(), int(line.split(':')[1].strip())
-                if number < 1 or count == '-':
-                    continue
-                hits[filepath][number] = 0 if count=='#####' else int(count)
-
+        f_lines = {} if filepath not in F_LINES else None
+        hits[filepath] = gcov(filename, f_lines=f_lines)
+        if filepath not in F_LINES:
+            F_LINES[filepath] = f_lines
     return test_result, hits
 
 if __name__ == "__main__":
@@ -94,9 +111,24 @@ if __name__ == "__main__":
         for i in np.where(y == 0)[0]:
             print("FAILED: ", tests[i])
         print(ochiai(X, y))
-        ranks = ranking(ochiai(X, y))
-        for i, r in enumerate(ranks):
-            if r <= 10:
-                print(r, code_elements[i])
+        scores = ochiai(X, y)
+        line_scores = { elem: scores[i] for i, elem in enumerate(code_elements) }
+        method_scores = {}
+        for filepath in F_LINES:
+            for function in F_LINES[filepath]:
+                method_scores[(filepath, function)] = 0.0
+                for lineno in F_LINES[filepath][function]:
+                    key = (filepath, lineno)
+                    if key in code_elements:
+                        score = line_scores[key]
+                        if not np.isnan(score) and score > method_scores[(filepath, function)]:
+                            method_scores[(filepath, function)] = score
+                #print((filepath, function), method_scores[(filepath, function)])
+        
+        methods = list(sorted(list(method_scores.keys())))
+        ranks = ranking([ method_scores[method] for method in methods])
+        results = [ (ranks[i], method, method_scores[method]) for i, method in enumerate(methods) ]
+        results.sort()
+        print(results)
     else:
         print("no failing test cases")
