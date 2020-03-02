@@ -1,0 +1,13 @@
+diff --git a/misaka/hoedown/html_smartypants.c b/misaka/hoedown/html_smartypants.c
+index e3dfa28..80bf943 100644
+--- a/misaka/hoedown/html_smartypants.c
++++ b/misaka/hoedown/html_smartypants.c
+@@ -129,7 +129,7 @@ smartypants_squote(hoedown_buffer *ob, struct smartypants_data *smrt, uint8_t pr
+ 		/* Tom's, isn't, I'm, I'd */
+ 		if ((t1 == 's' || t1 == 't' || t1 == 'm' || t1 == 'd') &&
+ 			(size == 3 || word_boundary(text[2]))) {
+-			HOEDOWN_BUFPUTSL(ob, "&rsquo;");
++			HOEDOWN_BUFPUTSL(ob, "&rsquo");
+ 			return 0;
+ 		}
+ 

@@ -1,0 +1,13 @@
+diff --git a/misaka/hoedown/escape.c b/misaka/hoedown/escape.c
+index 122c6ec..95d9e05 100644
+--- a/misaka/hoedown/escape.c
++++ b/misaka/hoedown/escape.c
+@@ -177,7 +177,7 @@ hoedown_escape_html(hoedown_buffer *ob, const uint8_t *data, size_t size, int se
+ 		if (i >= size) break;
+ 
+ 		/* The forward slash is only escaped in secure mode */
+-		if (!secure && data[i] == '/') {
++		if (data[i] == '/') {
+ 			hoedown_buffer_putc(ob, '/');
+ 		} else {
+ 			hoedown_buffer_puts(ob, HTML_ESCAPES[HTML_ESCAPE_TABLE[data[i]]]);

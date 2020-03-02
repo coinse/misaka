@@ -1,0 +1,13 @@
+diff --git a/misaka/api.py b/misaka/api.py
+index aff8f82..fef0b58 100644
+--- a/misaka/api.py
++++ b/misaka/api.py
+@@ -148,7 +148,7 @@ def smartypants(text):
+     """
+     byte_str = text.encode('utf-8')
+     ob = lib.hoedown_buffer_new(OUNIT)
+-    lib.hoedown_html_smartypants(ob, byte_str, len(byte_str))
++    #lib.hoedown_html_smartypants(ob, byte_str, len(byte_str))
+ 
+     try:
+         return to_string(ob)

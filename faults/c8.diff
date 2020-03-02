@@ -1,0 +1,13 @@
+diff --git a/misaka/hoedown/document.c b/misaka/hoedown/document.c
+index a9cb42c..8cc2989 100644
+--- a/misaka/hoedown/document.c
++++ b/misaka/hoedown/document.c
+@@ -1420,7 +1420,7 @@ is_hrule(uint8_t *data, size_t size)
+ 
+ 	/* the whole line must be the char or space */
+ 	while (i < size && data[i] != '\n') {
+-		if (data[i] == c) n++;
++		if (data[i] == c) i++;
+ 		else if (data[i] != ' ')
+ 			return 0;
+ 

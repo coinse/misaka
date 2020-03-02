@@ -1,0 +1,13 @@
+diff --git a/misaka/api.py b/misaka/api.py
+index aff8f82..4c0ecf6 100644
+--- a/misaka/api.py
++++ b/misaka/api.py
+@@ -180,7 +180,7 @@ class Markdown(object):
+             self.renderer.renderer,
+             self.extensions,
+             MAX_NESTING);
+-        lib.hoedown_document_render(document, ob, ib.data, ib.size);
++        lib.hoedown_document_render(document, ib, ib.data, ib.size);
+ 
+         lib.hoedown_buffer_free(ib)
+         lib.hoedown_document_free(document)

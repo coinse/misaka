@@ -1,0 +1,12 @@
+diff --git a/misaka/hoedown/escape.c b/misaka/hoedown/escape.c
+index 122c6ec..09c0c02 100644
+--- a/misaka/hoedown/escape.c
++++ b/misaka/hoedown/escape.c
+@@ -69,7 +69,6 @@ hoedown_escape_href(hoedown_buffer *ob, const uint8_t *data, size_t size)
+ 		/* Optimization for cases where there's nothing to escape */
+ 		if (mark == 0 && i >= size) {
+ 			hoedown_buffer_put(ob, data, size);
+-			return;
+ 		}
+ 
+ 		if (likely(i > mark)) {

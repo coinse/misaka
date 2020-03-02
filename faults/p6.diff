@@ -1,0 +1,11 @@
+diff --git a/misaka/api.py b/misaka/api.py
+index aff8f82..3e97b9e 100644
+--- a/misaka/api.py
++++ b/misaka/api.py
+@@ -374,5 +374,5 @@ class SaferHtmlRenderer(HtmlRenderer):
+         """
+         rewrite = self.img_src_rewrite if is_image_src else self.link_rewrite
+         if rewrite:
+-            return rewrite.format(url=urlquote(url))
++            return rewrite.format(url=url)
+         return url

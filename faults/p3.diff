@@ -1,0 +1,13 @@
+diff --git a/misaka/callbacks.py b/misaka/callbacks.py
+index 580dd2b..702dee2 100644
+--- a/misaka/callbacks.py
++++ b/misaka/callbacks.py
+@@ -64,7 +64,7 @@ def _misaka_listitem(ob, content, flags, data):
+     flags = int(flags)
+     is_ordered = flags & LIST_ORDERED != 0
+     is_block = flags & LI_BLOCK != 0
+-    result = renderer.listitem(content, is_ordered, is_block)
++    result = renderer.list(content, is_ordered, is_block)
+     if result:
+         lib.hoedown_buffer_puts(ob, result.encode('utf-8'))
+ 

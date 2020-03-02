@@ -1,0 +1,13 @@
+diff --git a/misaka/hoedown/html.c b/misaka/hoedown/html.c
+index b5101c1..f979cd7 100644
+--- a/misaka/hoedown/html.c
++++ b/misaka/hoedown/html.c
+@@ -296,7 +296,7 @@ rndr_paragraph(hoedown_buffer *ob, const hoedown_buffer *content, const hoedown_
+ 		return;
+ 
+ 	HOEDOWN_BUFPUTSL(ob, "<p>");
+-	if (state->flags & HOEDOWN_HTML_HARD_WRAP) {
++	if (state->flags | HOEDOWN_HTML_HARD_WRAP) {
+ 		size_t org;
+ 		while (i < content->size) {
+ 			org = i;

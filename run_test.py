@@ -129,6 +129,15 @@ if __name__ == "__main__":
         ranks = ranking([ method_scores[method] for method in methods])
         results = [ (ranks[i], method, method_scores[method]) for i, method in enumerate(methods) ]
         results.sort()
-        print(results)
+        for t in results[:100]:
+            print(t)
+            """
+            r, m, s = t
+            for l in F_LINES[m[0]][m[1]]:
+                if (m[0], l) in line_scores:
+                    print(l, line_scores[(m[0], l)])
+            print("========================")
+            """
+        #print(results)
     else:
         print("no failing test cases")

@@ -1,0 +1,13 @@
+diff --git a/misaka/hoedown/document.c b/misaka/hoedown/document.c
+index a9cb42c..cdecaaa 100644
+--- a/misaka/hoedown/document.c
++++ b/misaka/hoedown/document.c
+@@ -794,7 +794,7 @@ char_emphasis(hoedown_buffer *ob, hoedown_document *doc, uint8_t *data, size_t o
+ 		return ret + 1;
+ 	}
+ 
+-	if (size > 3 && data[1] == c && data[2] != c) {
++	if (size > 3 && data[1] != c && data[2] != c) {
+ 		if (_isspace(data[2]) || (ret = parse_emph2(ob, doc, data + 2, size - 2, c)) == 0)
+ 			return 0;
+ 

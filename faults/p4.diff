@@ -1,0 +1,13 @@
+diff --git a/misaka/callbacks.py b/misaka/callbacks.py
+index 580dd2b..5b3f093 100644
+--- a/misaka/callbacks.py
++++ b/misaka/callbacks.py
+@@ -249,7 +249,7 @@ def _misaka_image(ob, link, title, alt, data):
+     renderer = ffi.from_handle(lib.misaka_get_renderer(data))
+     link = to_string(link)
+     title = to_string(title)
+-    alt = to_string(alt)
++    # alt = to_string(alt)
+     result = renderer.image(link, title, alt)
+     if result:
+         lib.hoedown_buffer_puts(ob, result.encode('utf-8'))

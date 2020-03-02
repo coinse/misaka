@@ -1,0 +1,13 @@
+diff --git a/misaka/hoedown/document.c b/misaka/hoedown/document.c
+index a9cb42c..3ab8039 100644
+--- a/misaka/hoedown/document.c
++++ b/misaka/hoedown/document.c
+@@ -354,7 +354,7 @@ replace_spacing(hoedown_buffer *ob, const uint8_t *data, size_t size)
+ 
+ 		if (i >= size) break;
+ 
+-		if (!(i > 0 && data[i-1] == ' '))
++		if (!(i > 0 && data[i] == ' '))
+ 			hoedown_buffer_putc(ob, ' ');
+ 		i++;
+ 	}

@@ -1,0 +1,13 @@
+diff --git a/misaka/hoedown/html_blocks.c b/misaka/hoedown/html_blocks.c
+index f5e9dce..1fcdeeb 100644
+--- a/misaka/hoedown/html_blocks.c
++++ b/misaka/hoedown/html_blocks.c
+@@ -155,7 +155,7 @@ hoedown_find_block_tag (register const char *str, register unsigned int len)
+         {
+           register const char *resword;
+ 
+-          switch (key - 1)
++          switch (key)
+             {
+               case 0:
+                 resword = "p";

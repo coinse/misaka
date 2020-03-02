@@ -1,0 +1,13 @@
+diff --git a/misaka/hoedown/buffer.c b/misaka/hoedown/buffer.c
+index af77b70..da18530 100644
+--- a/misaka/hoedown/buffer.c
++++ b/misaka/hoedown/buffer.c
+@@ -142,7 +142,7 @@ hoedown_buffer_putc(hoedown_buffer *buf, uint8_t c)
+ 	if (buf->size >= buf->asize)
+ 		hoedown_buffer_grow(buf, buf->size + 1);
+ 
+-	buf->data[buf->size] = c;
++	buf->data[buf->size - 1] = c;
+ 	buf->size += 1;
+ }
+ 

@@ -1,0 +1,13 @@
+diff --git a/misaka/callbacks.py b/misaka/callbacks.py
+index 580dd2b..c3878ac 100644
+--- a/misaka/callbacks.py
++++ b/misaka/callbacks.py
+@@ -170,7 +170,7 @@ def _misaka_blockhtml(ob, text, data):
+ def _misaka_autolink(ob, link, type, data):
+     renderer = ffi.from_handle(lib.misaka_get_renderer(data))
+     link = to_string(link)
+-    is_email = int(type) & AUTOLINK_EMAIL != 0
++    is_email = int(type) & AUTOLINK_EMAIL == 0
+     result = renderer.autolink(link, is_email)
+     if result:
+         lib.hoedown_buffer_puts(ob, result.encode('utf-8'))
