@@ -1,4 +1,4 @@
-rm misaka/_hoedown.cpython-37m-darwin.so
+rm misaka/_hoedown.*.so
 rm misaka/*.gcno
 rm misaka/*.gcda
 rm misaka/*.o
