@@ -131,7 +131,7 @@ if __name__ == "__main__":
             print("FAILED: ", tests[i])
     
         nn_results = aggregate(
-            neural_network(X, y, verbose=False, ratio=0.1, epochs=100),
+            neural_network(X, y, verbose=False, ratio=1.0, epochs=200),
             code_elements
         )
         ochiai_results = aggregate(ochiai(X, y), code_elements)
