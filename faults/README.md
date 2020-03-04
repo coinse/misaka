@@ -49,3 +49,17 @@ git apply faults/[fault_id].diff
 |        | hoedown_escape_href               |            |
 | c10    | misaka/hoedown/html_smartypants.c | artificial |
 |        | smartypants_squote                |            |
+
+## Fault Localization
+
+### Prerequisite
+`gcov`, `coverage.py`, [`sbfl`](https://github.com/agb94/sbfl) and [`cov_parser`](https://github.com/agb94/CovParser) should be installed.
+
+
+### Run Test Cases and Produce Fault Localization Report
+```shell
+git apply faults/[fault_id].diff
+sh build.sh
+python run_test.py
+```
+
