@@ -1,10 +1,12 @@
-# Applying Faults
+# Benchmark of Multi-language S/W Faults
+
+## Applying Faults
 
 ```shell
 git apply faults/[fault_id].diff
 ```
 
-# Faults Info
+## Faults Info
 | Bug ID | Faulty File & Method              | Type       |
 |--------|-----------------------------------|------------|
 | p1     | misaka/api.py                     | [real](https://github.com/FSX/misaka/issues/66)       |
